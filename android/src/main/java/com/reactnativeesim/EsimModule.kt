@@ -3,6 +3,7 @@ package com.reactnativeesim
 import android.content.Context
 import android.os.Build
 import android.telephony.euicc.EuiccManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -22,7 +23,10 @@ class EsimModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
 
   @ReactMethod
   fun setupEsim(config: ReadableMap, promise: Promise) {
-    promise.resolve(true)
+    val esimConfig = EsimConfig(config)
+
+    Log.d("ESIM_DEBUG", esimConfig.address)
+    promise.resolve(EsimSetupResultStatus.Unknown)
   }
 
   @ReactMethod
