@@ -1,24 +1,36 @@
 package com.reactnativeesim
 
+import android.content.Context
+import android.os.Build
+import android.telephony.euicc.EuiccManager
+import androidx.annotation.RequiresApi
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
 
 class EsimModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
-    override fun getName(): String {
-        return "Esim"
-    }
+  @RequiresApi(Build.VERSION_CODES.P)
+  private var euiccManager: EuiccManager =
+    reactContext.getSystemService(Context.EUICC_SERVICE) as EuiccManager
 
-    // Example method
-    // See https://facebook.github.io/react-native/docs/native-modules-android
-    @ReactMethod
-    fun multiply(a: Int, b: Int, promise: Promise) {
-    
-      promise.resolve(a * b)
-    
-    }
+  override fun getName(): String {
+    return "RNESimManager"
+  }
 
-    
+  @ReactMethod
+  fun setupEsim(config: ReadableMap, promise: Promise) {
+    promise.resolve(true)
+  }
+
+  @ReactMethod
+  fun isEsimSupported(promise: Promise) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      promise.resolve(euiccManager.isEnabled)
+    } else {
+      promise.resolve(false)
+    }
+  }
 }
