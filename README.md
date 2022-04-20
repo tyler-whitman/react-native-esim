@@ -55,7 +55,7 @@ EsimManager.isEsimSupported()
     // you might get and error if app wasn't configured correctly
     // or device iOS version is lower than required minimum
   });
-  
+
 const config = {
   address: "";
   confirmationCode: "";
@@ -64,7 +64,7 @@ const config = {
   matchingId: "";
   oid: "";
 }
-  
+
 EsimManager.setupEsim(config)
   .then((result) => {
     // result might be success/fail/uknown
@@ -73,16 +73,25 @@ EsimManager.setupEsim(config)
     // you might get an error if app wasn't configured correctly
     // or passed configuration is invalid
   });
+
+EsimManager.openCellularSettings()
+  .then(() => {
+    // settings were opened
+  })
+  .catch((error) => {
+    // something went wrong opening the settings
+  });
 ```
 
 ## API
 
 ### Methods
 
-| **Method**        | **Parameter**                | **Description**                                                             |
-|-------------------|------------------------------|-----------------------------------------------------------------------------|
-| `isEsimSupported` | `void`                       | This method only checks to ensure that the device supports eSIM installation. Returns `boolean`. Might throw an error. |
-| `setupEsim`       | `EsimConfig`                 | Starts the provisioning process for a specified eSIM. Might throw and error. Returns `EsimSetupResultStatus` |
+| **Method**             | **Parameter** | **Description**                                                                                                        |
+|------------------------|---------------|------------------------------------------------------------------------------------------------------------------------|
+| `isEsimSupported`      | `void`        | This method only checks to ensure that the device supports eSIM installation. Returns `boolean`. Might throw an error. |
+| `setupEsim`            | `EsimConfig`  | Starts the provisioning process for a specified eSIM. Might throw and error. Returns `EsimSetupResultStatus`           |
+| `openCellularSettings` | `void`        | This method opens the devices cellular settings to setup a new eSim. Returns `void`. Might throw an error.             |
 
 #### EsimConfig
 

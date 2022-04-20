@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native';
+import { Linking, NativeModules, Platform } from 'react-native';
 
 const { RNESimManager } = NativeModules;
 
@@ -17,9 +17,25 @@ export enum EsimSetupResultStatus {
   Success = 2,
 }
 
+const openCellularSettings = async () => {
+  if (Platform.OS === 'android') {
+    await Linking.sendIntent(
+      'android.settings.MANAGE_ALL_SIM_PROFILES_SETTINGS'
+    );
+  } else {
+    await Linking.openURL('App-Prefs:MOBILE_DATA_SETTINGS_ID');
+  }
+};
+
 type EsimManager = {
   setupEsim(config: EsimConfig): Promise<EsimSetupResultStatus | never>;
   isEsimSupported(): Promise<boolean | never>;
+  openCellularSettings(): Promise<void>;
 };
 
-export default RNESimManager as EsimManager;
+const Manager: EsimManager = {
+  openCellularSettings,
+  ...RNESimManager,
+};
+
+export default Manager;

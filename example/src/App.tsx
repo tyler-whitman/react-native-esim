@@ -11,25 +11,32 @@ export default function App() {
     EsimManager.isEsimSupported().then(setSupported);
   }, []);
 
-  const performSetup = useCallback((): void => {
-    EsimManager.setupEsim({ address: 'address.com' })
-      .then((result): void => {
-        console.log(result);
-        switch (result) {
-          case EsimSetupResultStatus.Unknown:
-            console.log('esim setup unknown');
-            break;
-          case EsimSetupResultStatus.Fail:
-            console.log('esim setup fail');
-            break;
-          case EsimSetupResultStatus.Success:
-            console.log('esim setup success');
-            break;
-        }
-      })
-      .catch((error): void => {
-        console.log(error);
-      });
+  const openCellularSettings = useCallback(async (): Promise<void> => {
+    try {
+      await EsimManager.openCellularSettings();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const performSetup = useCallback(async (): Promise<void> => {
+    try {
+      const result = await EsimManager.setupEsim({ address: 'address.com' });
+      console.log(result);
+      switch (result) {
+        case EsimSetupResultStatus.Unknown:
+          console.log('esim setup unknown');
+          break;
+        case EsimSetupResultStatus.Fail:
+          console.log('esim setup fail');
+          break;
+        case EsimSetupResultStatus.Success:
+          console.log('esim setup success');
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   return (
@@ -37,7 +44,10 @@ export default function App() {
       <Text>
         Support status: {supported === undefined ? 'Loading...' : supportStatus}
       </Text>
+      <View style={styles.separator} />
       <Button title="Setup" onPress={performSetup} />
+      <View style={styles.separator} />
+      <Button title="Open Cellular Settings" onPress={openCellularSettings} />
     </View>
   );
 }
@@ -47,5 +57,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  separator: {
+    marginTop: 8,
   },
 });
