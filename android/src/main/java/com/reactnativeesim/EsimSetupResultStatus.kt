@@ -1,6 +1,6 @@
 package com.reactnativeesim
 
-class EsimSetupResultStatus() {
+class EsimSetupResultStatus {
   companion object {
     val Unknown = 0
     val Fail = 1
